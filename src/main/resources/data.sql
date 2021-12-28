@@ -6,3 +6,41 @@ INSERT INTO USER_ROLES (role, user_id)
 VALUES ('USER', 1),
        ('ADMIN', 2),
        ('USER', 2);
+
+
+INSERT INTO RESTARAUNT (name)
+VALUES ('Снежинка'),
+       ('Новогодний'),
+       ('Дед Мороз'),
+       ('Прошлогодний снег');
+
+INSERT INTO DISH(name, price)
+VALUES ('Сельдь под шубой', 200),
+       ('Заливная рыба', 300),
+       ('Оливье', 150),
+       ('Шампанское', 100),
+       ('Мандарины', 100),
+       ('Бутерброды с икрой', 500),
+       ('Перепел в сливочном соусе', 1500);
+
+
+
+INSERT INTO MENU(restaraunt_id, date_time)
+VALUES (1, CURRENT_DATE),
+       (1, CURRENT_DATE-1),
+       (2, CURRENT_DATE),
+       (3, CURRENT_DATE-1),
+
+       (3, CURRENT_DATE);
+
+INSERT INTO MENU_DISH (menu_id, dish_id)
+VALUES  (1, 2), (1, 3), (1,1),
+        (2, 2), (1, 6), (1,4),
+        (3, 6), (3, 4), (3,5),
+        (4, 5), (4, 2), (4,1),
+        (5, 2), (5, 3), (5,1);
+
+INSERT INTO VOTE(user_id, restaurant_id, vote_day)
+VALUES ( 1, 3, CURRENT_DATE),
+       ( 2, 3, CURRENT_DATE);
+

@@ -3,13 +3,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import ru.undina.topjava2.model.Restaurant;
 import ru.undina.topjava2.repository.RestaurantRepository;
 import ru.undina.topjava2.web.AbstractControllerTest;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.undina.topjava2.util.JsonUtil.writeValue;
 import static ru.undina.topjava2.web.restaurant.RestaurantTestData.*;
 import static ru.undina.topjava2.web.user.UserTestData.ADMIN_MAIL;
 
@@ -26,8 +32,61 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL + REST1_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MATCHER.contentJson(restaurant1));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getAll() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MATCHER.contentJson(restaurantList ));
+    }
+
+    @Test
+    void getUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void delete() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + (REST1_ID+3)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+        assertFalse(restaurantRepository.findById(REST1_ID + 3).isPresent());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void update() throws Exception {
+        Restaurant updated = getUpdated();
+        updated.setId(null);
+        perform(MockMvcRequestBuilders.put(REST_URL + REST1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(updated)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+        MATCHER.assertMatch(restaurantRepository.getById(REST1_ID), getUpdated());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void create() throws Exception {
+        Restaurant newRestaurant = getNew();
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newRestaurant)))
+                .andExpect(status().isCreated());
+
+        Restaurant created = MATCHER.readFromJson(action);
+        int newId = created.id();
+        newRestaurant.setId(newId);
+        MATCHER.assertMatch(created, newRestaurant);
+        MATCHER.assertMatch(restaurantRepository.getById(newId),newRestaurant);
     }
 
 
