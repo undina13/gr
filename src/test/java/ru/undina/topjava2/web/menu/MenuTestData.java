@@ -1,9 +1,11 @@
 package ru.undina.topjava2.web.menu;
 
+import ru.undina.topjava2.model.Dish;
 import ru.undina.topjava2.model.Menu;
 import ru.undina.topjava2.web.MatcherFactory;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 import static ru.undina.topjava2.web.dish.DishTestData.*;
@@ -22,5 +24,6 @@ public class MenuTestData {
     public static Menu getNew() {
         return new Menu(null, restaurant1, LocalDate.now(), dishMenu1);
     }
-
+    public static final List<Menu>menuList1 = List.of(menu4, menu5);
+    public static final List<Menu>menuToday= List.of(menu1, menu2, menu3);
 }

@@ -17,6 +17,8 @@ import ru.undina.topjava2.repository.RestaurantRepository;
 import ru.undina.topjava2.web.AbstractControllerTest;
 
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -73,6 +75,27 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MATCHER.contentJson(menu1));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void findAllByToday() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "today" ))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MATCHER.contentJson(menuToday));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void findAllByDate() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "getdate" )
+        .param("date", LocalDate.now().minusDays(1).toString()))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MATCHER.contentJson(menuList1));
     }
 
 
