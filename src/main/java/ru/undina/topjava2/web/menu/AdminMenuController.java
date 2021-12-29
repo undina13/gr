@@ -33,10 +33,9 @@ import static ru.undina.topjava2.util.validation.ValidationUtil.checkNew;
 public class AdminMenuController {
     static final String REST_URL = "/api/admin/menu";
 
-    @Autowired
+
     MenuRepository menuRepository;
-     DishRepository dishRepository;
-   RestaurantRepository restaurantRepository;
+
 
 
 @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
