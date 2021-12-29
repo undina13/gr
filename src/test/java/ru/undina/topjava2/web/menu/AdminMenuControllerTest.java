@@ -77,15 +77,7 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
                 .andExpect(MATCHER.contentJson(menu1));
     }
 
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void findAllByToday() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "today" ))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MATCHER.contentJson(menuToday));
-    }
+
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)

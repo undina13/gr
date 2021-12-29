@@ -90,12 +90,7 @@ public ResponseEntity<Menu> createNew(@Valid @RequestBody Menu menu) {
         menuRepository.save(menu);
     }
 
-    @GetMapping("/today")
-    public List<Menu> findAllByToday() {
-        log.info("get menu by today ");
-        LocalDate date = LocalDate.now();
-        return menuRepository.findAllByDate(date);
-    }
+
 
     @GetMapping("/getdate")
     public List<Menu> findAllByDate( @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
