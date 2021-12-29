@@ -1,8 +1,6 @@
 package ru.undina.topjava2.web.menu;
 
 import com.sun.istack.Nullable;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,58 +18,76 @@ import ru.undina.topjava2.repository.DishRepository;
 import ru.undina.topjava2.repository.MenuRepository;
 import ru.undina.topjava2.repository.RestaurantRepository;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
+import static ru.undina.topjava2.util.validation.ValidationUtil.assureIdConsistent;
+import static ru.undina.topjava2.util.validation.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = AdminMenuController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 public class AdminMenuController {
-    static final String REST_URL = "/api/admin/restaraut/{restarautId}/menu";
+    static final String REST_URL = "/api/admin/menu";
 
     @Autowired
     MenuRepository menuRepository;
      DishRepository dishRepository;
    RestaurantRepository restaurantRepository;
 
-    @Operation(
-            summary = "Create menu for the restaurant",
 
-            parameters = {
-                    @Parameter(name = "restaurantId",
+@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+@Transactional
+public ResponseEntity<Menu> createNew(@Valid @RequestBody Menu menu) {
+    log.info("create {}", menu);
+    checkNew(menu);
+    Menu created = menuRepository.save(menu);
+    URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path(REST_URL + "/{id}")
+            .buildAndExpand(created.getId()).toUri();
+    return ResponseEntity.created(uriOfNewResource).body(created);
+}
 
-                          //  content = @Content(examples = {@ExampleObject(value = "3")}),
-                            required = true),
-                    @Parameter(name = "forDate",
-                            description = "For date. Format yyyy-MM-dd."
-                          //  content = @Content(examples = {@ExampleObject(value = "2022-02-21")})
-                    )
-            }
-    )
-    @PostMapping()
-    @Transactional
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Menu> createMenu(@PathVariable int restaurantId,
-                                           @RequestParam @Nullable
-                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-                                           @RequestParam List<Integer> dishes) throws NotFoundException {
-        log.info("create menu for the Restaurant id = {}", restaurantId);
-        if ((dishes.size() < 2) || (dishes.size() > 5)) {
-            throw new NotFoundException("Wrong dishes number");
-        }
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
 
-        Restaurant rest = restaurantRepository
-                .findById(restaurantId)
-                .orElseThrow(() -> new NotFoundException("Restaurant with id= " + restaurantId + " not found"));
+    public void delete( @PathVariable Integer id) {
 
-        Menu menu = new Menu( null, rest, date == null ? LocalDate.now() : date, (Dish) dishes);
+        log.info("Menu delete {}", id);
 
-        Menu created = menuRepository.save(menu);
-
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{id}")
-                .buildAndExpand(restaurantId, created.getId()).toUri();
-        return ResponseEntity.created(uriOfNewResource).body(created);
+        menuRepository.delete(id);
     }
+
+    @GetMapping("restaurant/{restaurantId}")
+    @ResponseStatus(HttpStatus.OK)
+   public List<Menu>findAllByRestaurant(@PathVariable int restaurantId) {
+        log.info("get Menu by ID for restaurant {}", restaurantId);
+       return menuRepository.findAllByRestaurant(restaurantId);
+    }
+
+    @GetMapping()
+    public List<Menu> getAll() {
+        log.info("get all dishes ");
+        return menuRepository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Menu>> get(@PathVariable Integer id) {
+        log.info("get menu by id = {} ", id);
+        Optional<Menu> menu = menuRepository.findById(id);
+        return ResponseEntity.ok(menu);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void update(@PathVariable int id, @Valid @RequestBody Menu menu) {
+        log.info("update {} with id={}", menu, id);
+        assureIdConsistent(menu, id);
+        menuRepository.save(menu);
+    }
+
 }

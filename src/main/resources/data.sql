@@ -27,18 +27,18 @@ VALUES ('Сельдь под шубой', 200),
 
 INSERT INTO MENU(restaraunt_id, date_time)
 VALUES (1, CURRENT_DATE),
-       (1, CURRENT_DATE-1),
        (2, CURRENT_DATE),
-       (3, CURRENT_DATE-1),
+       (3, CURRENT_DATE),
+       (1, CURRENT_DATE-1),
 
-       (3, CURRENT_DATE);
+       (3, CURRENT_DATE-1);
 
 INSERT INTO MENU_DISH (menu_id, dish_id)
-VALUES  (1, 2), (1, 3), (1,1),
-        (2, 2), (1, 6), (1,4),
-        (3, 6), (3, 4), (3,5),
-        (4, 5), (4, 2), (4,1),
-        (5, 2), (5, 3), (5,1);
+VALUES  (1, 1), (1, 2), (1,3),
+        (2, 3), (2, 4), (2,5),
+        (3, 1), (3, 4), (3,6),
+        (4, 1), (4, 6), (4,3),
+        (5, 6), (5, 2), (5,1);
 
 INSERT INTO VOTE(user_id, restaurant_id, vote_day)
 VALUES ( 1, 3, CURRENT_DATE),
