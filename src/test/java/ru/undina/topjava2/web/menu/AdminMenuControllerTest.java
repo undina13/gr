@@ -57,24 +57,16 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
         MATCHER.assertMatch(menuRepository.getById(newId), newMenu);
     }
 
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    @Transactional(propagation = Propagation.NEVER)
-    void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + MENU1_ID))
-                .andDo(print())
-                .andExpect(status().isNoContent());
-        assertFalse(menuRepository.findById(MENU1_ID).isPresent());
-    }
+
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + MENU1_ID ))
+        perform(MockMvcRequestBuilders.get(REST_URL + (MENU1_ID+1) ))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MATCHER.contentJson(menu1));
+                .andExpect(MATCHER.contentJson(menu2));
     }
 
 
@@ -90,5 +82,13 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
                 .andExpect(MATCHER.contentJson(menuList1));
     }
 
-
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    @Transactional(propagation = Propagation.NEVER)
+    void delete() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + (MENU1_ID+5)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+        assertFalse(menuRepository.findById(MENU1_ID+5).isPresent());
+    }
 }

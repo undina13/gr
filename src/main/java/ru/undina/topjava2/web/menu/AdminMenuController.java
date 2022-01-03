@@ -2,6 +2,7 @@ package ru.undina.topjava2.web.menu;
 
 import com.sun.istack.Nullable;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import static ru.undina.topjava2.util.validation.ValidationUtil.checkNew;
 @Slf4j
 public class AdminMenuController {
     static final String REST_URL = "/api/admin/menu";
+    @Autowired
     MenuRepository menuRepository;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
