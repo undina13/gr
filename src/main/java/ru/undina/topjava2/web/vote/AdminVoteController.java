@@ -1,5 +1,6 @@
 package ru.undina.topjava2.web.vote;
 
+import com.sun.istack.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -7,11 +8,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ru.undina.topjava2.model.Menu;
 import ru.undina.topjava2.model.Restaurant;
 import ru.undina.topjava2.model.Vote;
 import ru.undina.topjava2.repository.VoteRepository;
 import ru.undina.topjava2.web.restaurant.AdminRestaurantController;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,5 +46,19 @@ public class AdminVoteController {
     @Transactional
     public void delete(@PathVariable int id) {
         voteRepository.delete(id);
+    }
+
+    @GetMapping("/today")
+    public List<Vote> findAllByToday() {
+        log.info("get votes by today ");
+        LocalDate date = LocalDate.now();
+        return voteRepository.findAllByDate(date);
+    }
+
+    @GetMapping("/user{id}")
+    public List<Vote> getAllByUserId(@PathVariable @Nullable int id) {
+        log.info("get menu by userid{} ", id);
+
+        return voteRepository.getAllByUserId(id);
     }
 }

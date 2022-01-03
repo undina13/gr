@@ -7,6 +7,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.undina.topjava2.repository.VoteRepository;
 import ru.undina.topjava2.web.AbstractControllerTest;
+import ru.undina.topjava2.web.menu.MenuTestData;
 
 import java.util.List;
 
@@ -16,7 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-import static ru.undina.topjava2.web.user.UserTestData.ADMIN_MAIL;
+import static ru.undina.topjava2.web.menu.MenuTestData.menuToday;
+import static ru.undina.topjava2.web.user.UserTestData.*;
 import static ru.undina.topjava2.web.vote.VoteTestData.*;
 import static ru.undina.topjava2.web.vote.VoteTestData.MATCHER;
 
@@ -57,6 +59,26 @@ public class AdminVoteControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertFalse(voteRepository.findById(VOTE1_ID + 1).isPresent());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void findAllByToday() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "today" ))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(VoteTestData.MATCHER.contentJson(List.of(vote2)));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getAllByUserId() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "user" + USER_ID))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(VoteTestData.MATCHER.contentJson(List.of(vote1)));
     }
 
 }

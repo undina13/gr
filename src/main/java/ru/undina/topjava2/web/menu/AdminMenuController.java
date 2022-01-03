@@ -89,13 +89,13 @@ public ResponseEntity<Menu> createNew(@Valid @RequestBody Menu menu) {
         menuRepository.save(menu);
     }
 
-
-
     @GetMapping("/getdate")
     public List<Menu> findAllByDate( @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get menu by {} ", date);
 
         return menuRepository.findAllByDate(date);
     }
+
+
 
 }
