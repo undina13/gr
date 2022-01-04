@@ -14,6 +14,7 @@ public class VoteTestData {
     public static final MatcherFactory.Matcher<Vote> MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "user", "restaurant");
     public static final int VOTE1_ID = 1;
+    public static final int NOT_FOUND = 99;
 
     public static final Vote vote1 = new Vote(VOTE1_ID, user, restaurant3, LocalDate.now().minusDays(1));
     public static final Vote vote2 = new Vote(VOTE1_ID+1, admin, restaurant3, LocalDate.now());

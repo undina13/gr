@@ -29,10 +29,9 @@ public class AdminRestaurantController {
      public final static String REST_URL = "/api/admin/restaurant";
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Restaurant>> get(@PathVariable int id) {
+    public ResponseEntity<Restaurant> get(@PathVariable int id) {
         log.info("get {}", id);
-        Optional<Restaurant> restaurant = repository.findById(id);
-        return ResponseEntity.ok(restaurant);
+        return ResponseEntity.of(repository.findById(id));
     }
 
     @GetMapping

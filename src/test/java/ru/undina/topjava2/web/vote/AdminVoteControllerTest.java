@@ -7,7 +7,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.undina.topjava2.repository.VoteRepository;
 import ru.undina.topjava2.web.AbstractControllerTest;
-import ru.undina.topjava2.web.menu.MenuTestData;
+
 
 import java.util.List;
 
@@ -17,10 +17,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
+
 import static ru.undina.topjava2.web.menu.MenuTestData.menuToday;
-import static ru.undina.topjava2.web.user.UserTestData.*;
+import static ru.undina.topjava2.web.user.UserTestData.ADMIN_MAIL;
+import static ru.undina.topjava2.web.user.UserTestData.USER_ID;
 import static ru.undina.topjava2.web.vote.VoteTestData.*;
-import static ru.undina.topjava2.web.vote.VoteTestData.MATCHER;
+
 
 public class AdminVoteControllerTest extends AbstractControllerTest {
     static final String REST_URL = "/api/admin/vote/";
@@ -37,6 +39,13 @@ public class AdminVoteControllerTest extends AbstractControllerTest {
                 .andExpect(MATCHER.contentJson(vote1));
     }
 
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL  + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getAll() throws Exception {

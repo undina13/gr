@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.undina.topjava2.util.JsonUtil.writeValue;
+import static ru.undina.topjava2.web.dish.DishTestData.NOT_FOUND;
 import static ru.undina.topjava2.web.restaurant.RestaurantTestData.*;
 import static ru.undina.topjava2.web.user.UserTestData.ADMIN_MAIL;
 
@@ -34,6 +35,14 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MATCHER.contentJson(restaurant1));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL  + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test

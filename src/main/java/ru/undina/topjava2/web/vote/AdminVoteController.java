@@ -29,10 +29,9 @@ public class AdminVoteController {
     VoteRepository voteRepository;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Vote>> get(@PathVariable int id) {
+    public ResponseEntity<Vote> get(@PathVariable int id) {
         log.info("get {}", id);
-        Optional<Vote> vote = voteRepository.findById(id);
-        return ResponseEntity.ok(vote);
+        return ResponseEntity.of(voteRepository.findById(id));
     }
 
     @GetMapping

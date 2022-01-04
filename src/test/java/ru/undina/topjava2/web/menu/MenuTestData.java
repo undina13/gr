@@ -27,4 +27,6 @@ public class MenuTestData {
     }
     public static final List<Menu>menuList1 = List.of(menu4, menu5);
     public static final List<Menu>menuToday= List.of(menu1, menu2, menu3);
+
+    public static final int NOT_FOUND = 99;
 }

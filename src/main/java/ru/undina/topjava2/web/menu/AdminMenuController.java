@@ -66,10 +66,10 @@ public class AdminMenuController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Menu>> get(@PathVariable Integer id) {
+    public ResponseEntity<Menu> get(@PathVariable Integer id) {
         log.info("get menu by id = {} ", id);
-        Optional<Menu> menu = menuRepository.findById(id);
-        return ResponseEntity.ok(menu);
+
+        return ResponseEntity.of(menuRepository.findById(id));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

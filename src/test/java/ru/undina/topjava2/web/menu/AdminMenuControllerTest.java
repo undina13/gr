@@ -27,7 +27,7 @@ import static ru.undina.topjava2.util.JsonUtil.writeValue;
 
 
 
-import static ru.undina.topjava2.web.menu.MenuTestData.MATCHER;
+import static ru.undina.topjava2.web.menu.MenuTestData.*;
 
 import static ru.undina.topjava2.web.menu.MenuTestData.*;
 import static ru.undina.topjava2.web.user.UserTestData.ADMIN_MAIL;
@@ -69,7 +69,13 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
                 .andExpect(MATCHER.contentJson(menu2));
     }
 
-
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL  + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
