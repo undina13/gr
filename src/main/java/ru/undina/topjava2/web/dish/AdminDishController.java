@@ -1,13 +1,6 @@
 package ru.undina.topjava2.web.dish;
 
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.undina.topjava2.error.AppException;
 import ru.undina.topjava2.model.Dish;
 import ru.undina.topjava2.repository.DishRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import static ru.undina.topjava2.util.validation.ValidationUtil.checkNew;
 
@@ -40,16 +31,16 @@ public class AdminDishController {
     DishRepository repository;
 
 
-    @Operation(
-            summary = "Delete dish with ID",
-            parameters = {
-                    @Parameter(name = "id",
-                            description = "Id of dish to delete. Use 7 for testing.",
-                            content = @Content(examples = {@ExampleObject(value = "7")}),
-                            required = true)
-            }
-
-    )
+    //    @Operation(
+//            summary = "Delete dish with ID",
+//            parameters = {
+//                    @Parameter(name = "id",
+//                            description = "Id of dish to delete. Use 7 for testing.",
+//                            content = @Content(examples = {@ExampleObject(value = "7")}),
+//                            required = true)
+//            }
+//
+//    )
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
@@ -57,34 +48,34 @@ public class AdminDishController {
         repository.delete(id);
     }
 
-    @Operation(
-            summary = "Get all dishes",
-                      responses = {
-                    @ApiResponse(responseCode = "200", description = "The dishes",
-                            content = @Content(mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Dish.class))))
-            }
-    )
+    //    @Operation(
+//            summary = "Get all dishes",
+//                      responses = {
+//                    @ApiResponse(responseCode = "200", description = "The dishes",
+//                            content = @Content(mediaType = "application/json",
+//                                    array = @ArraySchema(schema = @Schema(implementation = Dish.class))))
+//            }
+//    )
     @GetMapping()
     public List<Dish> getAll() {
         log.info("get all dishes ");
         return repository.findAll();
     }
 
-    @Operation(
-            summary = "Get dish with ID",
-            parameters = {
-                    @Parameter(name = "id",
-                            description = "The id of dish. Use 2 for testing.",
-                            content = @Content(examples = {@ExampleObject(value = "2")}),
-                            required = true)
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "The dish",
-                            content = @Content(mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Dish.class))))
-            }
-    )
+    //    @Operation(
+//            summary = "Get dish with ID",
+//            parameters = {
+//                    @Parameter(name = "id",
+//                            description = "The id of dish. Use 2 for testing.",
+//                            content = @Content(examples = {@ExampleObject(value = "2")}),
+//                            required = true)
+//            },
+//            responses = {
+//                    @ApiResponse(responseCode = "200", description = "The dish",
+//                            content = @Content(mediaType = "application/json",
+//                                    array = @ArraySchema(schema = @Schema(implementation = Dish.class))))
+//            }
+//    )
     @GetMapping("/{id}")
     public ResponseEntity<Dish> get(@PathVariable Integer id) {
         log.info("get dish by id = {} ", id);

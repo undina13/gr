@@ -3,19 +3,15 @@ package ru.undina.topjava2.web.menu;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import ru.undina.topjava2.model.Dish;
 import ru.undina.topjava2.model.Menu;
 import ru.undina.topjava2.repository.MenuRepository;
 import ru.undina.topjava2.repository.RestaurantRepository;
 import ru.undina.topjava2.web.AbstractControllerTest;
-
 
 import java.time.LocalDate;
 
@@ -24,11 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.undina.topjava2.util.JsonUtil.writeValue;
-
-
-
-import static ru.undina.topjava2.web.menu.MenuTestData.*;
-
 import static ru.undina.topjava2.web.menu.MenuTestData.*;
 import static ru.undina.topjava2.web.user.UserTestData.ADMIN_MAIL;
 
@@ -57,12 +48,10 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
         MATCHER.assertMatch(menuRepository.getById(newId), newMenu);
     }
 
-
-
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + (MENU1_ID+1) ))
+        perform(MockMvcRequestBuilders.get(REST_URL + (MENU1_ID + 1)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -72,7 +61,7 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL  + NOT_FOUND))
+        perform(MockMvcRequestBuilders.get(REST_URL + NOT_FOUND))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -80,8 +69,8 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void findAllByDate() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "getdate" )
-        .param("date", LocalDate.now().minusDays(1).toString()))
+        perform(MockMvcRequestBuilders.get(REST_URL + "getdate")
+                .param("date", LocalDate.now().minusDays(1).toString()))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -92,9 +81,9 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     @Transactional(propagation = Propagation.NEVER)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + (MENU1_ID+5)))
+        perform(MockMvcRequestBuilders.delete(REST_URL + (MENU1_ID + 5)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertFalse(menuRepository.findById(MENU1_ID+5).isPresent());
+        assertFalse(menuRepository.findById(MENU1_ID + 5).isPresent());
     }
 }

@@ -20,10 +20,11 @@ import java.util.List;
 @CacheConfig(cacheNames = "usersmenu")
 public class UserMenuController {
 
-     static final String REST_URL = "/api/user/menu/";
-@Autowired
+    static final String REST_URL = "/api/user/menu/";
+    @Autowired
     MenuRepository menuRepository;
-@Cacheable
+
+    @Cacheable
     @GetMapping("/today")
     public List<Menu> findAllByToday() {
         log.info("get menu by today ");

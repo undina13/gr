@@ -1,17 +1,16 @@
 package ru.undina.topjava2.web.restaurant;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.undina.topjava2.model.Restaurant;
 import ru.undina.topjava2.repository.RestaurantRepository;
 import ru.undina.topjava2.web.AbstractControllerTest;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,7 +25,6 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Autowired
     private RestaurantRepository restaurantRepository;
 
-
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
@@ -40,7 +38,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL  + NOT_FOUND))
+        perform(MockMvcRequestBuilders.get(REST_URL + NOT_FOUND))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -51,7 +49,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MATCHER.contentJson(restaurantList ));
+                .andExpect(MATCHER.contentJson(restaurantList));
     }
 
     @Test
@@ -63,7 +61,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + (REST1_ID+3)))
+        perform(MockMvcRequestBuilders.delete(REST_URL + (REST1_ID + 3)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertFalse(restaurantRepository.findById(REST1_ID + 3).isPresent());
@@ -95,8 +93,6 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newRestaurant.setId(newId);
         MATCHER.assertMatch(created, newRestaurant);
-        MATCHER.assertMatch(restaurantRepository.getById(newId),newRestaurant);
+        MATCHER.assertMatch(restaurantRepository.getById(newId), newRestaurant);
     }
-
-
 }

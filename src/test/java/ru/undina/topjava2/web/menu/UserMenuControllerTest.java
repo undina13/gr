@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.undina.topjava2.web.menu.MenuTestData.MATCHER;
 import static ru.undina.topjava2.web.menu.MenuTestData.menuToday;
-import static ru.undina.topjava2.web.user.UserTestData.ADMIN_MAIL;
 import static ru.undina.topjava2.web.user.UserTestData.USER_MAIL;
 
 public class UserMenuControllerTest extends AbstractControllerTest {
@@ -24,7 +23,7 @@ public class UserMenuControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void findAllByToday() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "today" ))
+        perform(MockMvcRequestBuilders.get(REST_URL + "today"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

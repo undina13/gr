@@ -13,9 +13,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(name = "vote_user_date", columnNames = {"user_id", "vote_day"})})
+@Entity
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(name = "vote_user_date", columnNames = {"user_id", "vote_day"})})
 
-public class Vote extends BaseEntity{
+public class Vote extends BaseEntity {
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)

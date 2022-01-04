@@ -13,13 +13,10 @@ import javax.persistence.UniqueConstraint;
 @Getter
 @Setter
 @Entity
-@Table(name = "restaraunt", uniqueConstraints=@UniqueConstraint(columnNames={"name"}))
-public class Restaurant extends NamedEntity{
-
-
+@Table(name = "restaraunt", uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
+public class Restaurant extends NamedEntity {
 
     public Restaurant(Integer id, String name) {
         super(id, name);
-
     }
 }

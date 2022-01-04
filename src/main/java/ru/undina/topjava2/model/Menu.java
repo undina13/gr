@@ -15,9 +15,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "menu" )
+@Table(name = "menu")
 
-public class Menu extends BaseEntity{
+public class Menu extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaraunt_id", nullable = false)
     @NotNull
@@ -27,7 +27,6 @@ public class Menu extends BaseEntity{
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDate date;
-
 
     @NotNull
     @ManyToMany(fetch = FetchType.EAGER)
@@ -40,16 +39,13 @@ public class Menu extends BaseEntity{
         super(id);
         this.restaurant = restaurant;
         this.date = date;
-        this.dish =  List.of(dish);
-
-
+        this.dish = List.of(dish);
     }
 
-
-    public Menu(Integer id, Restaurant restaurant, LocalDate date,  List<Dish> dishes) {
+    public Menu(Integer id, Restaurant restaurant, LocalDate date, List<Dish> dishes) {
         super(id);
         this.restaurant = restaurant;
         this.date = date;
-        this.dish =  dishes;
+        this.dish = dishes;
     }
 }

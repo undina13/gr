@@ -8,15 +8,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import ru.undina.topjava2.model.Menu;
-import ru.undina.topjava2.model.Restaurant;
 import ru.undina.topjava2.model.Vote;
 import ru.undina.topjava2.repository.VoteRepository;
-import ru.undina.topjava2.web.restaurant.AdminRestaurantController;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static ru.undina.topjava2.web.vote.AdminVoteController.REST_URL;
 

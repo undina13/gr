@@ -15,7 +15,6 @@ import ru.undina.topjava2.repository.RestaurantRepository;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import static ru.undina.topjava2.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.undina.topjava2.util.validation.ValidationUtil.checkNew;
@@ -25,8 +24,8 @@ import static ru.undina.topjava2.util.validation.ValidationUtil.checkNew;
 @Slf4j
 @AllArgsConstructor
 public class AdminRestaurantController {
-   RestaurantRepository repository;
-     public final static String REST_URL = "/api/admin/restaurant";
+    public final static String REST_URL = "/api/admin/restaurant";
+    RestaurantRepository repository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Restaurant> get(@PathVariable int id) {
@@ -35,7 +34,7 @@ public class AdminRestaurantController {
     }
 
     @GetMapping
-       public List<Restaurant> getAll() {
+    public List<Restaurant> getAll() {
         log.info("Restaurant getAll");
         return repository.findAll();
     }
@@ -43,8 +42,8 @@ public class AdminRestaurantController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-        public void delete(@PathVariable int id) {
-         repository.delete(id);
+    public void delete(@PathVariable int id) {
+        repository.delete(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +57,7 @@ public class AdminRestaurantController {
 
     @Transactional
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
         checkNew(restaurant);
         log.info("create {}", restaurant);
         Restaurant created = repository.save(restaurant);

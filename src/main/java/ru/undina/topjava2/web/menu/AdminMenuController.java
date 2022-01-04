@@ -18,7 +18,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static ru.undina.topjava2.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.undina.topjava2.util.validation.ValidationUtil.checkNew;

@@ -12,21 +12,13 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "dish" )
-public class Dish extends NamedEntity{
+@Table(name = "dish")
+public class Dish extends NamedEntity {
     @Column(name = "price")
     private int price;
-
-//    @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "menu_id")
-//    @JsonIgnore
-//    private Menu menu;
 
     public Dish(Integer id, String name, int price) {
         super(id, name);
         this.price = price;
-
     }
-
-   }
+}
