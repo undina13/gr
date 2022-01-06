@@ -30,17 +30,6 @@ public class AdminDishController {
     @Autowired
     DishRepository repository;
 
-
-    //    @Operation(
-//            summary = "Delete dish with ID",
-//            parameters = {
-//                    @Parameter(name = "id",
-//                            description = "Id of dish to delete. Use 7 for testing.",
-//                            content = @Content(examples = {@ExampleObject(value = "7")}),
-//                            required = true)
-//            }
-//
-//    )
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
@@ -48,34 +37,13 @@ public class AdminDishController {
         repository.delete(id);
     }
 
-    //    @Operation(
-//            summary = "Get all dishes",
-//                      responses = {
-//                    @ApiResponse(responseCode = "200", description = "The dishes",
-//                            content = @Content(mediaType = "application/json",
-//                                    array = @ArraySchema(schema = @Schema(implementation = Dish.class))))
-//            }
-//    )
+
     @GetMapping()
     public List<Dish> getAll() {
         log.info("get all dishes ");
         return repository.findAll();
     }
 
-    //    @Operation(
-//            summary = "Get dish with ID",
-//            parameters = {
-//                    @Parameter(name = "id",
-//                            description = "The id of dish. Use 2 for testing.",
-//                            content = @Content(examples = {@ExampleObject(value = "2")}),
-//                            required = true)
-//            },
-//            responses = {
-//                    @ApiResponse(responseCode = "200", description = "The dish",
-//                            content = @Content(mediaType = "application/json",
-//                                    array = @ArraySchema(schema = @Schema(implementation = Dish.class))))
-//            }
-//    )
     @GetMapping("/{id}")
     public ResponseEntity<Dish> get(@PathVariable Integer id) {
         log.info("get dish by id = {} ", id);
