@@ -15,7 +15,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "menu")
+@Table(name = "menu", uniqueConstraints = {@UniqueConstraint(
+        columnNames = {"restaraunt_id", "date_time"}, name = "menu_unique_restaurant_date_idx")})
+
+
 
 public class Menu extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)

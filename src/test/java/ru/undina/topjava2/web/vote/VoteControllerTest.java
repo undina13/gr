@@ -6,14 +6,30 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import ru.undina.topjava2.model.Menu;
 import ru.undina.topjava2.model.Vote;
 import ru.undina.topjava2.repository.VoteRepository;
 import ru.undina.topjava2.web.AbstractControllerTest;
+import ru.undina.topjava2.web.GlobalExceptionHandler;
 
+import java.time.LocalDate;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.undina.topjava2.util.JsonUtil.writeValue;
+import static ru.undina.topjava2.web.dish.DishTestData.dishMenu2;
+import static ru.undina.topjava2.web.menu.MenuTestData.MENU1_ID;
+import static ru.undina.topjava2.web.restaurant.RestaurantTestData.restaurant2;
+import static ru.undina.topjava2.web.restaurant.RestaurantTestData.restaurant3;
+import static ru.undina.topjava2.web.user.UserTestData.ADMIN_MAIL;
 import static ru.undina.topjava2.web.user.UserTestData.USER_MAIL;
+import static ru.undina.topjava2.web.user.UserTestData.user;
 import static ru.undina.topjava2.web.vote.VoteTestData.MATCHER;
+import static ru.undina.topjava2.web.vote.VoteTestData.*;
 
 public class VoteControllerTest extends AbstractControllerTest {
     static final String REST_URL = "/api/vote/";
@@ -35,6 +51,20 @@ public class VoteControllerTest extends AbstractControllerTest {
         newVote.setId(newId);
         MATCHER.assertMatch(created, newVote);
         MATCHER.assertMatch(voteRepository.getById(newId), newVote);
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    @WithUserDetails(value = ADMIN_MAIL)
+    void createDuplicate() throws Exception {
+        Vote duplicateVote = new Vote(VOTE1_ID, user, restaurant3, LocalDate.now().minusDays(1));
+        duplicateVote.setId(null);
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(duplicateVote)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().string(containsString(GlobalExceptionHandler.EXCEPTION_DUPLICATE_VOTE)));
     }
 
 //use before 11:00

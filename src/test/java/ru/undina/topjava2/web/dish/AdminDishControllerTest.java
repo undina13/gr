@@ -9,15 +9,21 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.undina.topjava2.model.Dish;
+import ru.undina.topjava2.model.Restaurant;
+import ru.undina.topjava2.model.Role;
+import ru.undina.topjava2.model.User;
 import ru.undina.topjava2.repository.DishRepository;
 import ru.undina.topjava2.web.AbstractControllerTest;
+import ru.undina.topjava2.web.GlobalExceptionHandler;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.undina.topjava2.util.JsonUtil.writeValue;
 import static ru.undina.topjava2.web.dish.DishTestData.*;
+import static ru.undina.topjava2.web.restaurant.RestaurantTestData.REST1_ID;
 import static ru.undina.topjava2.web.user.UserTestData.ADMIN_MAIL;
 
 public class AdminDishControllerTest extends AbstractControllerTest {
@@ -79,6 +85,9 @@ public class AdminDishControllerTest extends AbstractControllerTest {
         MATCHER.assertMatch(dishRepository.getById(newId), newDish);
     }
 
+
+
+
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     @Transactional(propagation = Propagation.NEVER)
@@ -92,4 +101,6 @@ public class AdminDishControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
         MATCHER.assertMatch(dishRepository.findById(DISH1_ID).orElseThrow(), getUpdated());
     }
+
+
 }

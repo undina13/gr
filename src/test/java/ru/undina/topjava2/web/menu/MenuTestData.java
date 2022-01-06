@@ -21,7 +21,7 @@ public class MenuTestData {
     public static final Menu menu6 = new Menu(MENU1_ID + 5, restaurant3, LocalDate.now().minusDays(2), dishMenu5);
 
     public static Menu getNew() {
-        return new Menu(null, restaurant1, LocalDate.now(), dishMenu1);
+        return new Menu(null, restaurant1, LocalDate.now().minusDays(2), dishMenu1);
     }
     public static final List<Menu>menuList1 = List.of(menu4, menu5);
     public static final List<Menu>menuToday= List.of(menu1, menu2, menu3);

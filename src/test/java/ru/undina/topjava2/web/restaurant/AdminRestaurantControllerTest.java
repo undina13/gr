@@ -6,16 +6,25 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import ru.undina.topjava2.model.Menu;
 import ru.undina.topjava2.model.Restaurant;
 import ru.undina.topjava2.repository.RestaurantRepository;
 import ru.undina.topjava2.web.AbstractControllerTest;
+import ru.undina.topjava2.web.GlobalExceptionHandler;
 
+import java.time.LocalDate;
+
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.undina.topjava2.util.JsonUtil.writeValue;
 import static ru.undina.topjava2.web.dish.DishTestData.NOT_FOUND;
+import static ru.undina.topjava2.web.dish.DishTestData.dishMenu2;
+import static ru.undina.topjava2.web.menu.MenuTestData.MENU1_ID;
 import static ru.undina.topjava2.web.restaurant.RestaurantTestData.*;
 import static ru.undina.topjava2.web.user.UserTestData.ADMIN_MAIL;
 
@@ -94,5 +103,18 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         newRestaurant.setId(newId);
         MATCHER.assertMatch(created, newRestaurant);
         MATCHER.assertMatch(restaurantRepository.getById(newId), newRestaurant);
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    @WithUserDetails(value = ADMIN_MAIL)
+    void createDuplicate() throws Exception {
+        Restaurant duplicateRestaurant = new Restaurant(REST1_ID, "Снежинка");
+        duplicateRestaurant.setId(null);
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(duplicateRestaurant)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 }

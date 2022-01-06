@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,8 @@ import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.M
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public static final String EXCEPTION_DUPLICATE_EMAIL = "User with this email already exists";
+    public static final String EXCEPTION_DUPLICATE_MENU = "Menu  already exists";
+    public static final String EXCEPTION_DUPLICATE_VOTE = "Vote  already exists";
 
     private final ErrorAttributes errorAttributes;
 
@@ -88,5 +91,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Exception", ex);
         super.handleExceptionInternal(ex, body, headers, status, request);
         return createResponseEntity(getDefaultBody(request, ErrorAttributeOptions.of(), ValidationUtil.getRootCause(ex).getMessage()), status);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> conflictException(WebRequest request, DataIntegrityViolationException ex) {
+        log.error("DataIntegrityViolationException ", ex);
+        String rootMsg = ex.getMessage();
+        if (rootMsg != null) {
+            String lowerCaseMsg = rootMsg.toLowerCase();
+                if (lowerCaseMsg.contains("menu_unique_restaurant_date_idx")) {
+                    return createResponseEntity(getDefaultBody(request, ErrorAttributeOptions.defaults(), EXCEPTION_DUPLICATE_MENU), HttpStatus.UNPROCESSABLE_ENTITY);
+                }
+            if (lowerCaseMsg.contains("vote_user_date_idx")) {
+                return createResponseEntity(getDefaultBody(request, ErrorAttributeOptions.defaults(), EXCEPTION_DUPLICATE_VOTE), HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+
+        }
+        return createResponseEntity(getDefaultBody(request, ErrorAttributeOptions.of(MESSAGE), null), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

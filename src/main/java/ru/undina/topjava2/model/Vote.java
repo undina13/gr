@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(name = "vote_user_date", columnNames = {"user_id", "vote_day"})})
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(name = "vote_user_date_idx", columnNames = {"user_id", "vote_day"})})
 
 public class Vote extends BaseEntity {
     @JoinColumn(name = "user_id")
