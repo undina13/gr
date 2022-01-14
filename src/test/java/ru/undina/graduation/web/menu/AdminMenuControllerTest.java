@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.undina.graduation.util.JsonUtil.writeValue;
+import static ru.undina.graduation.web.dish.DishTestData.NOT_FOUND;
 import static ru.undina.graduation.web.dish.DishTestData.dishMenu2;
 import static ru.undina.graduation.web.menu.MenuTestData.*;
 import static ru.undina.graduation.web.restaurant.RestaurantTestData.restaurant2;
@@ -101,5 +102,13 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertFalse(menuRepository.findById(MENU1_ID + 5).isPresent());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void deleteNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 }

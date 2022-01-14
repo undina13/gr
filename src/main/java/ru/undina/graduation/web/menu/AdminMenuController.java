@@ -48,7 +48,7 @@ public class AdminMenuController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         log.info("Menu delete {}", id);
-        menuRepository.delete(id);
+        menuRepository.deleteExisted(id);
     }
 
     @GetMapping("restaurants/{restaurantId}")

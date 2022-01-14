@@ -92,4 +92,12 @@ public class AdminDishControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
         MATCHER.assertMatch(dishRepository.findById(DISH1_ID).orElseThrow(), getUpdated());
     }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void deleteNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
 }

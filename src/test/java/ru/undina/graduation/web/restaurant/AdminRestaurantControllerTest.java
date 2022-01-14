@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.undina.graduation.model.Restaurant;
 import ru.undina.graduation.repository.RestaurantRepository;
 import ru.undina.graduation.web.AbstractControllerTest;
+import ru.undina.graduation.web.user.UserTestData;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -107,6 +108,14 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(duplicateRestaurant)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void deleteNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }

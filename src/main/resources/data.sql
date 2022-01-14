@@ -30,8 +30,8 @@ VALUES (1, CURRENT_DATE),
        (2, CURRENT_DATE),
        (3, CURRENT_DATE),
        (1, CURRENT_DATE-1),
-
-       (2, CURRENT_DATE-1);
+       (2, CURRENT_DATE-1),
+       (3, CURRENT_DATE-2);
 
 INSERT INTO MENU_DISH (menu_id, dish_id)
 VALUES  (1, 1), (1, 2),

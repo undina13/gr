@@ -34,7 +34,7 @@ public class AdminDishController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("Delete dish with id = {}", id);
-        repository.delete(id);
+        repository.deleteExisted(id);
     }
 
     @GetMapping()
