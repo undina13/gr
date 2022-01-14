@@ -26,7 +26,7 @@ import static ru.undina.graduation.util.validation.ValidationUtil.checkNew;
 @RequestMapping(value = AdminMenuController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 public class AdminMenuController {
-    static final String REST_URL = "/api/admin/menu";
+    static final String REST_URL = "/api/admin/menus";
     @Autowired
    protected MenuRepository menuRepository;
 
@@ -51,7 +51,7 @@ public class AdminMenuController {
         menuRepository.delete(id);
     }
 
-    @GetMapping("restaurant/{restaurantId}")
+    @GetMapping("restaurants/{restaurantId}")
     @ResponseStatus(HttpStatus.OK)
     public List<Menu> findAllByRestaurant(@PathVariable int restaurantId) {
         log.info("get Menu by ID for restaurant {}", restaurantId);

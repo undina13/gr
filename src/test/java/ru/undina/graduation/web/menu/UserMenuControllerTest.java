@@ -16,7 +16,7 @@ import static ru.undina.graduation.web.menu.MenuTestData.menuToday;
 import static ru.undina.graduation.web.user.UserTestData.USER_MAIL;
 
 public class UserMenuControllerTest extends AbstractControllerTest {
-    static final String REST_URL = "/api/user/menu/";
+    static final String REST_URL = "/api/user/menus/";
     @Autowired
  protected  MenuRepository menuRepository;
 

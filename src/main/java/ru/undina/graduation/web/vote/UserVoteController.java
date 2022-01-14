@@ -22,7 +22,7 @@ import static ru.undina.graduation.util.validation.ValidationUtil.checkNew;
 @RequestMapping(value = UserVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 public class UserVoteController {
-    static final String REST_URL = "/api/vote";
+    static final String REST_URL = "/api/votes";
    private final VoteRepository voteRepository;
 
     public UserVoteController(VoteRepository voteRepository) {

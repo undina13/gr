@@ -21,7 +21,7 @@ import static ru.undina.graduation.web.dish.DishTestData.*;
 import static ru.undina.graduation.web.user.UserTestData.ADMIN_MAIL;
 
 public class AdminDishControllerTest extends AbstractControllerTest {
-    private static final String REST_URL = "/api/admin/dish/";
+    private static final String REST_URL = "/api/admin/dishes/";
 
     @Autowired
     DishRepository dishRepository;

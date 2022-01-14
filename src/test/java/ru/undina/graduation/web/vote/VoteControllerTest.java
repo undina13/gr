@@ -28,7 +28,7 @@ import static ru.undina.graduation.web.vote.VoteTestData.MATCHER;
 import static ru.undina.graduation.web.vote.VoteTestData.*;
 
 public class VoteControllerTest extends AbstractControllerTest {
-    static final String REST_URL = "/api/vote/";
+    static final String REST_URL = "/api/votes/";
     @Autowired
     private VoteRepository voteRepository;
 

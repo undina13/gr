@@ -21,7 +21,7 @@ import static ru.undina.graduation.web.vote.AdminVoteController.REST_URL;
 @Slf4j
 @AllArgsConstructor
 public class AdminVoteController {
-    static final String REST_URL = "/api/admin/vote";
+    static final String REST_URL = "/api/admin/votes";
    private final VoteRepository voteRepository;
 
     @GetMapping("/{id}")

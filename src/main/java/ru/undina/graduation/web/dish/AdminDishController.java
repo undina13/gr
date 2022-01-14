@@ -26,7 +26,7 @@ import static ru.undina.graduation.util.validation.ValidationUtil.checkNew;
 @AllArgsConstructor
 @CacheConfig(cacheNames = "dishes")
 public class AdminDishController {
-    public final static String REST_URL = "/api/admin/dish";
+    public final static String REST_URL = "/api/admin/dishes";
 
   private final  DishRepository repository;
 

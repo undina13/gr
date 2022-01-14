@@ -20,7 +20,7 @@ import java.util.List;
 @CacheConfig(cacheNames = "usersmenu")
 public class UserMenuController {
 
-    static final String REST_URL = "/api/user/menu/";
+    static final String REST_URL = "/api/user/menus/";
 @Autowired
     MenuRepository menuRepository;
 

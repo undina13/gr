@@ -24,7 +24,7 @@ import static ru.undina.graduation.util.validation.ValidationUtil.checkNew;
 @Slf4j
 @AllArgsConstructor
 public class AdminRestaurantController {
-    public final static String REST_URL = "/api/admin/restaurant";
+    public final static String REST_URL = "/api/admin/restaurants";
   private final RestaurantRepository repository;
 
     @GetMapping("/{id}")

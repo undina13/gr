@@ -20,7 +20,7 @@ import static ru.undina.graduation.web.vote.VoteTestData.*;
 
 
 public class AdminVoteControllerTest extends AbstractControllerTest {
-    static final String REST_URL = "/api/admin/vote/";
+    static final String REST_URL = "/api/admin/votes/";
     @Autowired
     private VoteRepository voteRepository;
 
