@@ -19,6 +19,9 @@ public class UserTestData {
 
     public static final User user = new User(USER_ID, "User", USER_MAIL, "password", Role.USER);
     public static final User admin = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "admin", Role.ADMIN, Role.USER);
+    public static final User user2 = new User(USER_ID + 2, "User2", "user2@yandex.ru", "password", Role.USER);
+    public static final User user3 = new User(USER_ID + 3, "User3", "user3@yandex.ru", "password", Role.USER);
+    public static final User user4 = new User(USER_ID+ 4, "User4", "user4@yandex.ru", "password", Role.USER);
 
     public static User getNew() {
         return new User(null, "New", "new@gmail.com", "newPass", false, new Date(), Collections.singleton(Role.USER));
