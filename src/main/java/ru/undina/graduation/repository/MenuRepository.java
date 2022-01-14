@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Transactional(readOnly = true)
-public interface MenuRepository extends BaseRepository<Menu>{
+public interface MenuRepository extends BaseRepository<Menu> {
     @Query("SELECT m FROM Menu m WHERE  m.date = :date ")
-List<Menu>findAllByDate(LocalDate date);
+    List<Menu> findAllByDate(LocalDate date);
 
     @Query("SELECT m FROM Menu m  WHERE  m.restaurant.id = :RestaurantId ")
-    List<Menu>findAllByRestaurant(int RestaurantId);
+    List<Menu> findAllByRestaurant(int RestaurantId);
 }

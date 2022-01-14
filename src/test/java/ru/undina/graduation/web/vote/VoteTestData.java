@@ -16,8 +16,8 @@ public class VoteTestData {
     public static final int VOTE1_ID = 1;
     public static final int NOT_FOUND = 99;
 
-    public static final Vote vote1 = new Vote(VOTE1_ID, user, restaurant3, LocalDate.now().minusDays(1));
-    public static final Vote vote2 = new Vote(VOTE1_ID + 1, admin, restaurant3, LocalDate.now());
+    public static final Vote vote1 = new Vote(VOTE1_ID, user, restaurant1, LocalDate.now().minusDays(1));
+    public static final Vote vote2 = new Vote(VOTE1_ID + 1, admin, restaurant1, LocalDate.now());
 
     public static Vote getNew() {
         return new Vote(null, user, restaurant1, LocalDate.now());

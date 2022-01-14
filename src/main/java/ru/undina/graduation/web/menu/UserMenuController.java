@@ -21,8 +21,8 @@ import java.util.List;
 public class UserMenuController {
 
     static final String REST_URL = "/api/user/menu/";
-    @Autowired
-  protected  MenuRepository menuRepository;
+@Autowired
+    MenuRepository menuRepository;
 
     @Cacheable
     @GetMapping("/today")
