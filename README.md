@@ -22,3 +22,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
 
 API documentation by Swagger:
 http://localhost:8080/swagger-ui.html
+
+Credentials
+login - user@yandex.ru password password
+login - admin@gmail.com password admin
