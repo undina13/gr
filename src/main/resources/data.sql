@@ -8,7 +8,7 @@ VALUES ('USER', 1),
        ('USER', 2);
 
 
-INSERT INTO RESTARAUNT (name)
+INSERT INTO RESTAURANT (name)
 VALUES ('Снежинка'),
        ('Новогодний'),
        ('Дед Мороз'),
@@ -25,7 +25,7 @@ VALUES ('Сельдь под шубой', 200),
 
 
 
-INSERT INTO MENU(restaraunt_id, date_time)
+INSERT INTO MENU(RESTAURANT_ID, date)
 VALUES (1, CURRENT_DATE),
        (2, CURRENT_DATE),
        (3, CURRENT_DATE),

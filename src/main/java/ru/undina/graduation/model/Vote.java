@@ -16,14 +16,16 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "vote", uniqueConstraints = {@UniqueConstraint(name = "vote_user_date_idx", columnNames = {"user_id", "vote_day"})})
 public class Vote extends BaseEntity {
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private User user;
 
-    @JoinColumn(name = "restaurant_id")
+    @JoinColumn(name = "restaurant_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private Restaurant restaurant;
 
     @Column(name = "vote_day", nullable = false)
