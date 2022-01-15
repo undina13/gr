@@ -13,19 +13,13 @@ import ru.undina.graduation.repository.VoteRepository;
 import ru.undina.graduation.web.AbstractControllerTest;
 import ru.undina.graduation.web.GlobalExceptionHandler;
 
-import java.time.LocalDate;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.undina.graduation.util.JsonUtil.writeValue;
 import static ru.undina.graduation.web.restaurant.RestaurantTestData.REST1_ID;
-import static ru.undina.graduation.web.restaurant.RestaurantTestData.restaurant3;
 import static ru.undina.graduation.web.user.UserTestData.ADMIN_MAIL;
 import static ru.undina.graduation.web.user.UserTestData.USER_MAIL;
-import static ru.undina.graduation.web.user.UserTestData.user;
-import static ru.undina.graduation.web.vote.VoteTestData.MATCHER;
 import static ru.undina.graduation.web.vote.VoteTestData.*;
 
 public class VoteControllerTest extends AbstractControllerTest {
@@ -50,32 +44,41 @@ public class VoteControllerTest extends AbstractControllerTest {
         MATCHER.assertMatch(created, newVote);
         MATCHER.assertMatch(voteRepository.getById(newId), newVote);
     }
-//TODO
-//    @Test
-//    @Transactional(propagation = Propagation.NEVER)
-//    @WithUserDetails(value = USER_MAIL)
-//    void createDuplicate() throws Exception {
-//
-//        perform(MockMvcRequestBuilders.post(REST_URL)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .param("restaurantId", Integer.toString(REST1_ID)))
-//                .andDo(print())
-//                .andExpect(status().isUnprocessableEntity())
-//                .andExpect(content().string(containsString(GlobalExceptionHandler.EXCEPTION_DUPLICATE_VOTE)));
-//    }
 
-//use before 11:00
-//    @Test
-//    @WithUserDetails(value = USER_MAIL)
-//    void update() throws Exception {
-//        Vote updated = getUpdated();
-//        updated.setId(null);
-//        perform(MockMvcRequestBuilders.put(REST_URL + (VOTE1_ID+1))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(writeValue(updated)))
-//                .andDo(print())
-//                .andExpect(status().isNoContent());
-//        MATCHER.assertMatch(voteRepository.getById(VOTE1_ID+1), getUpdated());
-//    }
+    @Test
+    @WithUserDetails(value = "user4@yandex.ru")
+    void getTodayVote() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "today"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(VoteTestData.MATCHER.contentJson(vote3));
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    @WithUserDetails(value = ADMIN_MAIL)
+    void createDuplicate() throws Exception {
+
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("restaurantId", Integer.toString(REST1_ID)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().string(containsString(GlobalExceptionHandler.EXCEPTION_DUPLICATE_VOTE)));
+    }
+
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void update() throws Exception {
+               perform(MockMvcRequestBuilders.put(REST_URL + (VOTE1_ID + 1))
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("restaurantId", Integer.toString(REST1_ID + 1)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+        MATCHER.assertMatch(voteRepository.getById(VOTE1_ID + 1), getUpdated());
+    }
+
 
 }

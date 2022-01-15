@@ -48,5 +48,6 @@ VALUES  (1, 1), (1, 2),
 
 INSERT INTO VOTE(user_id, restaurant_id, vote_day)
 VALUES ( 1, 1, CURRENT_DATE-1),
-       ( 2, 1, CURRENT_DATE);
+       ( 2, 1, CURRENT_DATE),
+       ( 5, 1, CURRENT_DATE);
 

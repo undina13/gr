@@ -1,5 +1,6 @@
 package ru.undina.graduation.web.vote;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.webjars.NotFoundException;
 import ru.undina.graduation.error.TimeException;
 import ru.undina.graduation.model.Vote;
 import ru.undina.graduation.repository.RestaurantRepository;
@@ -28,6 +30,7 @@ import static ru.undina.graduation.util.validation.ValidationUtil.checkNew;
 @RequestMapping(value = UserVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 public class UserVoteController {
+    private LocalTime timeEndVoting = LocalTime.of(23, 00);
     static final String REST_URL = "/api/votes";
    private final VoteRepository voteRepository;
    @Autowired
@@ -37,20 +40,7 @@ public class UserVoteController {
         this.voteRepository = voteRepository;
     }
 
-//    @Transactional
-//    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Vote> create(@Valid @RequestBody Vote vote) {
-//        log.info("create {}", vote);
-//        checkNew(vote);
-//
-//        Vote created = voteRepository.save(vote);
-//        URI uriOfNewResource =
-//                ServletUriComponentsBuilder.fromCurrentContextPath()
-//                        .path(REST_URL + "/{id}")
-//                        .buildAndExpand(created.getId())
-//                        .toUri();
-//        return ResponseEntity.created(uriOfNewResource).body(created);
-//    }
+
 
     @Transactional
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -73,12 +63,24 @@ public class UserVoteController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody @Valid Vote vote, @PathVariable int id) throws TimeException {
-        log.info("update {} with id={}", vote, id);
-        assureIdConsistent(vote, id);
-        if (LocalTime.now().isAfter(LocalTime.of(11, 00))) {
+    public void update(@RequestParam @NotNull Integer restaurantId, @PathVariable int id) throws TimeException {
+        log.info("update vote with id={}",  id);
+        if (LocalTime.now().isAfter(timeEndVoting)) {
             throw new TimeException("Vote change time  is ending");
         }
-        voteRepository.save(vote);
+        LocalDate date = LocalDate.now();
+        int userId = SecurityUtil.authUser().getId();
+        Vote vote = voteRepository.getVoteByDateAndUserId(date, userId);
+                assureIdConsistent(vote, id);
+                voteRepository.save(vote);
+
+    }
+
+    @GetMapping("/today")
+    public ResponseEntity<Vote> getTodayVote() {
+        log.info("get today");
+        LocalDate date = LocalDate.now();
+        int userId = SecurityUtil.authUser().getId();
+        return ResponseEntity.of(voteRepository.findVoteByDateAndUserId(date, userId));
     }
 }

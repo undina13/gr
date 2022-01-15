@@ -36,12 +36,12 @@ public class AdminVoteController {
         return voteRepository.findAll();
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
-    public void delete(@PathVariable int id) {
-        voteRepository.delete(id);
-    }
+//    @DeleteMapping("/{id}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    @Transactional
+//    public void delete(@PathVariable int id) {
+//        voteRepository.delete(id);
+//    }
 
     @GetMapping("/today")
     public List<Vote> findAllByToday() {
