@@ -9,7 +9,9 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface MenuRepository extends BaseRepository<Menu> {
-    @Query("SELECT m FROM Menu m WHERE  m.date = :date ")
+
+    List<Menu> findAllByDateAndRestaurantId(LocalDate date, int RestaurantId);
+
     List<Menu> findAllByDate(LocalDate date);
 
     @Query("SELECT m FROM Menu m  WHERE  m.restaurant.id = :RestaurantId ")

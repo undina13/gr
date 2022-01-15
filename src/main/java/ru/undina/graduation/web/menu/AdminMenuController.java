@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.undina.graduation.model.Dish;
 import ru.undina.graduation.model.Menu;
 import ru.undina.graduation.repository.MenuRepository;
+import ru.undina.graduation.repository.RestaurantRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -26,20 +28,24 @@ import static ru.undina.graduation.util.validation.ValidationUtil.checkNew;
 @RequestMapping(value = AdminMenuController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 public class AdminMenuController {
-    static final String REST_URL = "/api/admin/menus";
+    static final String REST_URL = "/api/admin/restaurants/{restaurantId}/menu";
     @Autowired
    protected MenuRepository menuRepository;
+    @Autowired
+    RestaurantRepository restaurantRepository;
+
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @CacheEvict(value = "menu", allEntries = true)
     @Transactional
-    public ResponseEntity<Menu> createNew(@Valid @RequestBody Menu menu) {
+    public ResponseEntity<Menu> createNew(@Valid @RequestBody Menu menu, @PathVariable Integer restaurantId) {
         log.info("create {}", menu);
         checkNew(menu);
+       menu.setRestaurant(restaurantRepository.getById(restaurantId));
         Menu created = menuRepository.save(menu);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
-                .buildAndExpand(created.getId()).toUri();
+                .buildAndExpand(restaurantId, created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
@@ -58,33 +64,30 @@ public class AdminMenuController {
         return menuRepository.findAllByRestaurant(restaurantId);
     }
 
-    @GetMapping()
-    public List<Menu> getAll() {
-        log.info("get all dishes ");
-        return menuRepository.findAll();
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<Menu> get(@PathVariable Integer id) {
+    public ResponseEntity<Menu> get(@PathVariable Integer id,  @PathVariable Integer restaurantId) {
         log.info("get menu by id = {} ", id);
-
+       Menu menu = menuRepository.getById(id);
+        assureIdConsistent(menu.getRestaurant(), restaurantId);
         return ResponseEntity.of(menuRepository.findById(id));
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "menu", allEntries = true)
-    @Transactional
-    public void update(@PathVariable int id, @Valid @RequestBody Menu menu) {
-        log.info("update {} with id={}", menu, id);
-        assureIdConsistent(menu, id);
-        menuRepository.save(menu);
-    }
+//    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    @CacheEvict(value = "menu", allEntries = true)
+//    @Transactional
+//    public void update(@PathVariable int id, @Valid @RequestBody Menu menu,  @PathVariable Integer restaurantId) {
+//        log.info("update {} with id={}", menu, id);
+//        assureIdConsistent(menu, id);
+//        Menu updated = menuRepository.getById(id);
+//        assureIdConsistent(updated.getRestaurant(), restaurantId);
+//        menuRepository.save(menu);
+//    }
 
     @GetMapping("/getdate")
-    public List<Menu> findAllByDate(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public List<Menu> findAllByDate(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,  @PathVariable Integer restaurantId) {
         log.info("get menu by {} ", date);
 
-        return menuRepository.findAllByDate(date);
+        return menuRepository.findAllByDateAndRestaurantId(date, restaurantId);
     }
 }

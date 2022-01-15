@@ -23,7 +23,8 @@ public class MenuTestData {
     public static Menu getNew() {
         return new Menu(null, restaurant1, LocalDate.now().minusDays(2), dishMenu1);
     }
-    public static final List<Menu>menuList1 = List.of(menu4, menu5);
+    public static Menu getUpdated(){return new Menu(MENU1_ID+ 4, restaurant3, LocalDate.now(), List.of(dish5));}
+    public static final List<Menu>menuList1 = List.of(menu4);
     public static final List<Menu>menuToday= List.of(menu1, menu2, menu3);
 
     public static final int NOT_FOUND = 99;

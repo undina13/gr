@@ -8,8 +8,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.undina.graduation.model.Dish;
 import ru.undina.graduation.model.Menu;
 import ru.undina.graduation.repository.MenuRepository;
+import ru.undina.graduation.repository.RestaurantRepository;
 import ru.undina.graduation.web.AbstractControllerTest;
 import ru.undina.graduation.web.GlobalExceptionHandler;
 
@@ -21,16 +23,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.undina.graduation.util.JsonUtil.writeValue;
-import static ru.undina.graduation.web.dish.DishTestData.NOT_FOUND;
+
 import static ru.undina.graduation.web.dish.DishTestData.dishMenu2;
 import static ru.undina.graduation.web.menu.MenuTestData.*;
+import static ru.undina.graduation.web.restaurant.RestaurantTestData.REST1_ID;
 import static ru.undina.graduation.web.restaurant.RestaurantTestData.restaurant2;
 import static ru.undina.graduation.web.user.UserTestData.ADMIN_MAIL;
 
 public class AdminMenuControllerTest extends AbstractControllerTest {
-    private static final String REST_URL = "/api/admin/menus/";
+    private static final String REST_URL = "/api/admin/restaurants/";
     @Autowired
     MenuRepository menuRepository;
+    @Autowired
+    RestaurantRepository restaurantRepository;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -38,7 +43,7 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
     void createNew() throws Exception {
         Menu newMenu = MenuTestData.getNew();
         ResultActions action = perform(MockMvcRequestBuilders
-                .post(REST_URL)
+                .post(REST_URL+ REST1_ID  + "/menu")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newMenu)))
                 .andDo(print())
@@ -57,7 +62,7 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
     void createDuplicate() throws Exception {
         Menu duplicateMenu = new Menu(MENU1_ID + 1, restaurant2, LocalDate.now(), dishMenu2);
         duplicateMenu.setId(null);
-        perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL+ (REST1_ID + 1)  + "/menu")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(duplicateMenu)))
                 .andDo(print())
@@ -68,7 +73,7 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + (MENU1_ID + 1)))
+        perform(MockMvcRequestBuilders.get(REST_URL + (REST1_ID + 1) + "/menu/" + (MENU1_ID + 1)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -78,15 +83,15 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + NOT_FOUND))
+        perform(MockMvcRequestBuilders.get(REST_URL + (REST1_ID + 1) + "/menu/"+ NOT_FOUND))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void findAllByDate() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "getdate")
+        perform(MockMvcRequestBuilders.get(REST_URL + REST1_ID  + "/menu/"+ "getdate")
                 .param("date", LocalDate.now().minusDays(1).toString()))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -98,7 +103,7 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     @Transactional(propagation = Propagation.NEVER)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + (MENU1_ID + 5)))
+        perform(MockMvcRequestBuilders.delete(REST_URL+ (REST1_ID + 2) + "/menu/"  + (MENU1_ID + 5)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertFalse(menuRepository.findById(MENU1_ID + 5).isPresent());
@@ -107,8 +112,22 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void deleteNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND))
+        perform(MockMvcRequestBuilders.delete(REST_URL + (REST1_ID + 2) + "/menu/" + NOT_FOUND))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
+
+//    @Test
+//    @WithUserDetails(value = ADMIN_MAIL)
+//    @Transactional(propagation = Propagation.NEVER)
+//    void update() throws Exception {
+//        Menu updated = getUpdated();
+//        updated.setId(null);
+//        perform(MockMvcRequestBuilders.put(REST_URL + (REST1_ID + 3) + "/menu/"+ (MENU1_ID+4))
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(writeValue(updated)))
+//                .andDo(print())
+//                .andExpect(status().isNoContent());
+//        MATCHER.assertMatch(menuRepository.findById(MENU1_ID+4).orElseThrow(), getUpdated());
+//    }
 }
