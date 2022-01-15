@@ -5,10 +5,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.undina.graduation.model.Dish;
 
+import java.util.List;
+
 @Transactional(readOnly = true)
-public interface DishRepository extends BaseRepository<Dish>{
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM Dish u WHERE u.id=:id")
-    int delete(int id);
+public interface DishRepository extends BaseRepository<Dish> {
+    List<Dish> getDishesByRestaurantId(int restaurantId);
 }

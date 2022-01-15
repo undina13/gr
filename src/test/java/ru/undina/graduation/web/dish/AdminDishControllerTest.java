@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.undina.graduation.model.Dish;
 import ru.undina.graduation.repository.DishRepository;
+import ru.undina.graduation.repository.RestaurantRepository;
 import ru.undina.graduation.web.AbstractControllerTest;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -18,18 +19,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.undina.graduation.util.JsonUtil.writeValue;
 import static ru.undina.graduation.web.dish.DishTestData.*;
+import static ru.undina.graduation.web.restaurant.RestaurantTestData.REST1_ID;
 import static ru.undina.graduation.web.user.UserTestData.ADMIN_MAIL;
 
 public class AdminDishControllerTest extends AbstractControllerTest {
-    private static final String REST_URL = "/api/admin/dishes/";
+    private static final String REST_URL = "/api/admin/restaurants/";
 
     @Autowired
     DishRepository dishRepository;
+    @Autowired
+    RestaurantRepository restaurantRepository;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + (DISH1_ID + 1)))
+        perform(MockMvcRequestBuilders.get(REST_URL+ REST1_ID + "/dishes/" + (DISH1_ID + 1)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -39,22 +43,22 @@ public class AdminDishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + NOT_FOUND))
+        perform(MockMvcRequestBuilders.get(REST_URL+ REST1_ID + "/dishes/" + NOT_FOUND))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     void getUnAuth() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + DISH1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + REST1_ID + "/dishes/"+ DISH1_ID))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    @Transactional(propagation = Propagation.NEVER)
+   @Transactional
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + (DISH1_ID + 6)))
+        perform(MockMvcRequestBuilders.delete(REST_URL+ (REST1_ID + 2) + "/dishes/"  + (DISH1_ID + 6)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertFalse(dishRepository.findById(DISH1_ID + 6).isPresent());
@@ -66,7 +70,7 @@ public class AdminDishControllerTest extends AbstractControllerTest {
     void createNew() throws Exception {
         Dish newDish = getNew();
         ResultActions action = perform(MockMvcRequestBuilders
-                .post(REST_URL)
+                .post(REST_URL+ (REST1_ID + 2) + "/dishes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newDish)))
                 .andDo(print())
@@ -85,7 +89,7 @@ public class AdminDishControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         Dish updated = getUpdated();
         updated.setId(null);
-        perform(MockMvcRequestBuilders.put(REST_URL + DISH1_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL + REST1_ID + "/dishes/"+ DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(updated)))
                 .andDo(print())
@@ -96,8 +100,17 @@ public class AdminDishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void deleteNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND))
+        perform(MockMvcRequestBuilders.delete(REST_URL + REST1_ID + "/dishes/"+ NOT_FOUND))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getAll() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + REST1_ID  + "/dishes"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MATCHER.contentJson(dish1, dish2));
     }
 }
